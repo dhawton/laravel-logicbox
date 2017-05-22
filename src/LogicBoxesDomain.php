@@ -52,8 +52,7 @@ class LogicBoxesDomain extends LogicBoxes
     public function checkAvailability($domain, $tld, $suggestions = 'false')
     {
         $method = "available";
-        $this->setAppends(['domain-name' => $domain]);
-        $this->setAppends(['tlds' => $tld]);
+        $this->setAppends(['domain-name' => $domain, 'tlds' => $tld]);
         $response = $this->get($this->resource, $method, ['suggestions' => $suggestions]);
         return $this;
     }
