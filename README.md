@@ -2,7 +2,6 @@
 
 This library let your laravel application talk with Logicboxes API with ease.
 
-
 ### How to install
 1. Run `composer require pangpondpon/laravel-lb` to include this library to your project
 2. Add `Dhawton/LaravelLb\LaravelLbServiceProvider::class` into your providers array in config/app.php
@@ -20,7 +19,6 @@ return [
 
 ];
 ```
-
 
 ### How to use in Laravel Controller
 
