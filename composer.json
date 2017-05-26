@@ -1,6 +1,6 @@
 {
-    "name": "dhawton/laravel-lb",
-    "description": "Library that let you connect your laravel application to Logicboxes with ease",
+    "name": "dhawton/laravel-logicbox",
+    "description": "Library that let you connect your laravel application to Logicbox's API with ease",
     "homepage": "http://www.danielhawton.com",
     "license": "MIT",
     "authors": [
