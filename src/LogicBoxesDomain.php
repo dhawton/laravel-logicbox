@@ -91,4 +91,10 @@ class LogicBoxesDomain extends LogicBoxes
         return $this;
     }
 
+    public function modifyContact(array $parameters) {
+        $method = 'modify-contact';
+        $this->post($this->resource, $method, $parameters);
+        return $this;
+    }
+
 }

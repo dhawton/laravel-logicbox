@@ -2,6 +2,7 @@
 
 namespace Dhawton\LaravelLb;
 
+use Dhawton\LaravelLb\Exceptions\ErrorResponseException;
 use Dhawton\LaravelLb\Exceptions\InvalidFormatException;
 use Dhawton\LaravelLb\Exceptions\InvalidRequestTypeException;
 use Dhawton\LaravelLb\Exceptions\TimeoutResponseException;
@@ -11,24 +12,28 @@ use Dhawton\LaravelLb\Request;
 use GuzzleHttp;
 use GuzzleHttp\Exception\RequestException;
 
-class LogicBoxes {
+class LogicBoxes
+{
 
-    private $testMode = true;
-    private $userId = "";
-    private $apiKey = "";
-    private $format = "json";
-    private $variables = [];
-    private $requestType = "GET";
-    private $appends = [];
-    private $request = '';
-    private $throwException = false;
+    protected $testMode = true;
+    protected $userId = "";
+    protected $apiKey = "";
+    protected $format = "json";
+    protected $variables = [];
+    protected $requestType = "GET";
+    protected $appends = [];
+    protected $request = '';
+    protected $throwException = false;
+    protected $resource;
+    protected $method;
+    protected $response;
+    protected $interface;
 
     public function __construct()
     {
         $this->interface = null;
 
-        if(function_exists('config'))
-        {
+        if (function_exists('config')) {
             $this->testMode = config('logicboxes.test_mode');
 
             $this->userId = config('logicboxes.credentials.auth_userid');
@@ -82,8 +87,7 @@ class LogicBoxes {
 
     public function setRequestType($requestType)
     {
-        if(!in_array($requestType, ['GET', 'POST']))
-        {
+        if (!in_array($requestType, ['GET', 'POST'])) {
             throw new InvalidRequestTypeException("Request type must be only GET or POST", 2);
         }
 
@@ -93,27 +97,31 @@ class LogicBoxes {
 
     public function getCredentialQueryString()
     {
-    	return "auth-userid={$this->userId}&api-key={$this->apiKey}";
+        return "auth-userid={$this->userId}&api-key={$this->apiKey}";
     }
 
     public function getRootPath()
     {
-    	$path = "https://";
-    	if($this->testMode) $path .= "test.";
+        $path = "https://";
+        if ($this->testMode) $path .= "test.";
 
-    	$path .= "httpapi.com/api";
-    	return $path;
+        $path .= "httpapi.com/api";
+        return $path;
     }
 
     public function setResource($resource)
     {
-    	$this->resource = $resource;
-    	return $this;
+        $this->resource = $resource;
+        return $this;
     }
 
     public function getResource()
     {
         return $this->resource;
+    }
+
+    public function getResponse() {
+        return $this->response;
     }
 
     public function getFormat()
@@ -123,8 +131,7 @@ class LogicBoxes {
 
     public function setFormat($format)
     {
-        if(!in_array($format, ['json', 'xml']))
-        {
+        if (!in_array($format, ['json', 'xml'])) {
             throw new InvalidFormatException('Logicboxes format can be only json or xml', 1);
         }
 
@@ -134,8 +141,8 @@ class LogicBoxes {
 
     public function setMethod($method)
     {
-    	$this->method = $method;
-    	return $this;
+        $this->method = $method;
+        return $this;
     }
 
     public function getMethod()
@@ -157,12 +164,9 @@ class LogicBoxes {
     public function setAppends($appends)
     {
         foreach ($appends as $key => $value) {
-            if (!is_array($value))
-            {
+            if (!is_array($value)) {
                 $this->appends[] = [$key => $value];
-            }
-            else
-            {
+            } else {
                 $this->appends[$key] = $value;
             }
         }
@@ -177,12 +181,13 @@ class LogicBoxes {
 
     public function call()
     {
-        switch($this->getRequestType())
-        {
+        switch ($this->getRequestType()) {
             case "GET":
                 return $this->get($this->resource, $this->method, $this->variables, $this->format);
             case "POST":
                 return $this->post($this->resource, $this->method, $this->variables, $this->format);
+            default:
+                return null;
         }
     }
 
@@ -214,15 +219,15 @@ class LogicBoxes {
         $this->response = $client->get()->getResponse();
 
         if ($this->throwException) {
-          if (strpos($this->response, '504 Gateway Time-out') !== false) {
-            throw new TimeoutResponseException($this->response, 504);
-          }
+            if (strpos($this->response, '504 Gateway Time-out') !== false) {
+                throw new TimeoutResponseException($this->response, 504);
+            }
 
-          $response = json_decode($this->response);
+            $response = json_decode($this->response);
 
-          if (isset($response->status)) {
-            throw new ErrorResponseException($response->message, 3);
-          }
+            if (isset($response->status)) {
+                throw new ErrorResponseException($response->message, 3);
+            }
         }
 
         return $this;
@@ -256,7 +261,7 @@ class LogicBoxes {
 
     public function getJson()
     {
-    	return json_decode($this->response);
+        return json_decode($this->response);
     }
 
     public function toJson()
@@ -266,7 +271,7 @@ class LogicBoxes {
 
     public function getArray()
     {
-    	return json_decode($this->response, true);
+        return json_decode($this->response, true);
     }
 
     public function toArray()
@@ -281,11 +286,11 @@ class LogicBoxes {
             $queryStringArray[] = "${key}=${value}";
         }
         if (!empty($this->appends)) {
-          foreach ($this->appends as $appendKey => $append) {
-              foreach ($append as $key => $value) {
-                $queryStringArray[] = "${appendKey}=${value}";
-              }
-          }
+            foreach ($this->appends as $appendKey => $append) {
+                foreach ($append as $key => $value) {
+                    $queryStringArray[] = "${appendKey}=${value}";
+                }
+            }
         }
 
         return implode("&", $queryStringArray);
@@ -298,12 +303,12 @@ class LogicBoxes {
 
     public function enabledThrowException()
     {
-      $this->throwException = true;
+        $this->throwException = true;
     }
 
     public function unabledThrowException()
     {
-      $this->throwException = false;
+        $this->throwException = false;
     }
 
     /**
@@ -313,12 +318,52 @@ class LogicBoxes {
      */
     public function encodeVariables($variables)
     {
-        foreach ($variables as $key => $value)
-        {
+        foreach ($variables as $key => $value) {
             $variables[$key] = urlencode($value);
         }
 
         return $variables;
     }
 
+    /**
+     * Check if the credential is correct and login-able
+     */
+    public function canLogin()
+    {
+        $this->get('resellers', 'generate-token', ['ip' => '1.1.1.1']);
+        $response = $this->toArray();
+        $invalidCredentialMessage = "Invalid credentials, or your User account maybe Inactive or Suspended";
+        if (isset($response['message']) && ($response['message'] == $invalidCredentialMessage)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check if the response is an error
+     * @param  array|bool $exceptionalMessages The message to be except as an error
+     * @param  bool $stringAble Some method like get reseller API key got a return type as string
+     *                                      so we need to allow that to happen
+     * @return bool
+     */
+    public function isErrorResponse($exceptionalMessages = [], $stringAble = true)
+    {
+        $response = $this->toArray();
+
+        if ($response == null) return true;
+
+        // Return false if the response is string and we allow stringAble
+        if ($stringAble && gettype($response) == 'string') return false;
+
+        // If the response doesn't contain status field or it contain but the status field
+        // is not ERROR, we don't see it as an error
+        if (!isset($response['status']) || ($response['status'] != 'ERROR')) return false;
+
+        // No need to validate if user not set any possible messages
+        if (!count($exceptionalMessages)) return true;
+
+        $message = $response['message'] ?? '';
+
+        return !in_array($message, $exceptionalMessages);
+    }
 }
