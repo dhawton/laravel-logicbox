@@ -81,11 +81,8 @@ Class Request
 	public function get()
 	{
 		$ch = curl_init();
-
 		curl_setopt($ch, CURLOPT_URL, $this->endPoint);
-
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
 
 		if($this->interface)
@@ -94,7 +91,6 @@ Class Request
 		}
 
 		$result = curl_exec($ch);
-
 		curl_close($ch);
 
 		$this->response = $result;

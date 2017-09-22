@@ -30,4 +30,11 @@ class LogicBoxesProduct extends LogicBoxes {
         $method="move";
         return $this->post($this->resource, $method, $variables);
     }
+
+    public function getResellerCost()
+    {
+        $method = "reseller-cost-price";
+        $response = $this->get($this->resource, $method);
+        return $this;
+    }
 }

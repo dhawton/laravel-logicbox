@@ -1,26 +1,33 @@
 {
-    "name": "dhawton/laravel-logicbox",
-    "description": "Library that let you connect your laravel application to Logicbox's API with ease",
-    "homepage": "http://www.danielhawton.com",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Daniel Hawton",
-            "email": "daniel@hawton.org"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=5.5.9",
-        "vlucas/phpdotenv": "^2.3",
-        "nesbot/carbon": "^1.21"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "5.5.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Dhawton\\LaravelLb\\": "src/"
-        }
+  "name": "dhawton/laravel-logicbox",
+  "description": "Library that let you connect your laravel application to Logicbox's API with ease",
+  "homepage": "http://www.danielhawton.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Daniel Hawton",
+      "email": "daniel@hawton.org"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.5.9",
+    "vlucas/phpdotenv": "^2.3",
+    "nesbot/carbon": "^1.21"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Dhawton\\LaravelLb\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Dhawton\\LaravelLb\\LaravelLbServiceProvider"
+      ]
+    }
+  }
 }
