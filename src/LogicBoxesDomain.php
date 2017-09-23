@@ -97,4 +97,8 @@ class LogicBoxesDomain extends LogicBoxes
         return $this;
     }
 
+    public function renew($parameters) {
+        $method = "renew";
+        $this->post($this->resource, $method, $parameters);
+    }
 }
