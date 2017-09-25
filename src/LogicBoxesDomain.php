@@ -101,4 +101,9 @@ class LogicBoxesDomain extends LogicBoxes
         $method = "renew";
         return $this->post($this->resource, $method, $parameters);
     }
+
+    public function suggestions($parameters) {
+        $method = 'v5/suggest-names';
+        return $this->get($this->resource, $method, $parameters);
+    }
 }
