@@ -4,11 +4,22 @@ namespace Dhawton\LaravelLb;
 
 use Dhawton\LaravelLb\LogicBoxes;
 
+/**
+ * Class LogicBoxesDomain
+ * @package Dhawton\LaravelLb
+ */
 class LogicBoxesDomain extends LogicBoxes
 {
+    /**
+     * @var string
+     */
     private $domainname = "";
 
-	public function __construct($domainname='')
+    /**
+     * LogicBoxesDomain constructor.
+     * @param string $domainname
+     */
+    public function __construct($domainname='')
     {
         parent::__construct();
 
@@ -17,11 +28,18 @@ class LogicBoxesDomain extends LogicBoxes
 
     }
 
+    /**
+     * @return string
+     */
     public function getDomainname()
     {
         return $this->domainname;
     }
 
+    /**
+     * @param $domainname
+     * @return $this
+     */
     public function setDomainname($domainname)
     {
         $this->domainname = $domainname;
@@ -49,6 +67,12 @@ class LogicBoxesDomain extends LogicBoxes
         return $this;
     }
 
+    /**
+     * @param $domain
+     * @param $tld
+     * @param string $suggestions
+     * @return $this
+     */
     public function checkAvailability($domain, $tld, $suggestions = 'false')
     {
         $method = "available";
@@ -57,6 +81,10 @@ class LogicBoxesDomain extends LogicBoxes
         return $this;
     }
 
+    /**
+     * @param $orderId
+     * @return $this
+     */
     public function detailsByOrderId($orderId)
     {
         $method = 'details';
@@ -69,6 +97,10 @@ class LogicBoxesDomain extends LogicBoxes
         return $this;
     }
 
+    /**
+     * @param $parameters
+     * @return $this
+     */
     public function search($parameters)
     {
       $method = 'search';
@@ -76,6 +108,11 @@ class LogicBoxesDomain extends LogicBoxes
       return $this;
     }
 
+    /**
+     * @param $orderId
+     * @param $nameServers
+     * @return $this
+     */
     public function modifyNs($orderId, $nameServers)
     {
         $method = 'modify-ns';
@@ -91,18 +128,36 @@ class LogicBoxesDomain extends LogicBoxes
         return $this;
     }
 
+    /**
+     * @param array $parameters
+     * @return $this
+     */
     public function modifyContact(array $parameters) {
         $method = 'modify-contact';
         $this->post($this->resource, $method, $parameters);
         return $this;
     }
 
-    public function renew($parameters) {
+    /**
+     * @param array $parameters
+     * @return \Dhawton\LaravelLb\LogicBoxes
+     */
+    public function renew(array $parameters) {
         $method = "renew";
         return $this->post($this->resource, $method, $parameters);
     }
 
-    public function suggestions($parameters) {
+
+    /**
+     * @param string $keyword
+     * @param bool $exactMatch
+     * @return \Dhawton\LaravelLb\LogicBoxes
+     */
+    public function suggestions(string $keyword, bool $exactMatch = false) {
+        $parameters = [
+            'keyword' => $keyword,
+            'exact-match' => $exactMatch
+        ];
         $method = 'v5/suggest-names';
         return $this->get($this->resource, $method, $parameters);
     }
