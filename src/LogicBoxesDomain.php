@@ -70,14 +70,17 @@ class LogicBoxesDomain extends LogicBoxes
     /**
      * @param $domain
      * @param $tld
-     * @param string $suggestions
      * @return $this
      */
-    public function checkAvailability($domain, $tld, $suggestions = 'false')
+    public function checkAvailability($domain, $tld)
     {
         $method = "available";
-        $this->setAppends(['domain-name' => $domain, 'tlds' => $tld]);
-        $response = $this->get($this->resource, $method, ['suggestions' => $suggestions]);
+        $parameters = [
+            "domain-name" => $domain,
+            "tlds" => $tld,
+            "suggestions" => "false"            // Doesn't work in API
+        ];
+        $response = $this->get($this->resource, $method, $parameters);
         return $this;
     }
 
