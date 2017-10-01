@@ -174,7 +174,7 @@ class LogicBoxesDomain extends LogicBoxes
      */
     public function register(string $domain, $nameservers, array $parameters) {
         $method = "register";
-        $parameters['domain'] = $domain;
+        $parameters['domain-name'] = $domain;
         $this->setAppends(['ns' => $nameservers]);
         return $this->post($this->resource, $method, $parameters);
     }
