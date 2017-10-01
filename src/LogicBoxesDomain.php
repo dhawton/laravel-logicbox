@@ -164,4 +164,18 @@ class LogicBoxesDomain extends LogicBoxes
         $method = 'v5/suggest-names';
         return $this->get($this->resource, $method, $parameters);
     }
+
+    /**
+     * @param string $domain
+     * @param array|string $nameservers
+     * @param array $parameters
+     *
+     * @return \Dhawton\LaravelLb\LogicBoxes
+     */
+    public function register(string $domain, $nameservers, array $parameters) {
+        $method = "register";
+        $parameters['domain'] = $domain;
+        $this->setAppends(['ns' => $nameservers]);
+        return $this->post($this->resource, $method, $parameters);
+    }
 }
