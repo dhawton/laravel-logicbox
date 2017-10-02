@@ -178,4 +178,74 @@ class LogicBoxesDomain extends LogicBoxes
         $this->setAppends(['ns' => $nameservers]);
         return $this->post($this->resource, $method, $parameters);
     }
+
+    /**
+     * @param int           $orderId
+     * @param string        $cns
+     * @param string|array  $ip
+     *
+     * @return \Dhawton\LaravelLb\LogicBoxes
+     */
+    public function addChildNameServer(int $orderId, string $cns, $ip) {
+        $method = "add-cns";
+        $this->setAppends(['ip' => $ip]);
+        $parameters = [
+            'order-id' => $orderId,
+            'cns' => $cns
+        ];
+        return $this->post($this->resource, $method, $parameters);
+    }
+
+    /**
+     * @param int           $orderId
+     * @param string        $cns
+     * @param string|array  $ip
+     *
+     * @return \Dhawton\LaravelLb\LogicBoxes
+     */
+    public function deleteChildNameServer(int $orderId, string $cns, $ip) {
+        $method = "delete-cns-ip";
+        $parameters = [
+            'order-id' => $orderId,
+            'cns' => $cns
+        ];
+        $this->setAppends(['ip' => $ip]);
+        return $this->post($this->resource, $method, $parameters);
+    }
+
+    /**
+     * @param int    $orderId
+     * @param string $oldCns
+     * @param string $newCns
+     *
+     * @return \Dhawton\LaravelLb\LogicBoxes
+     */
+    public function modifyChildNameServerName(int $orderId, string $oldCns, string $newCns) {
+        $parameters = [
+            'order-id' => $orderId,
+            'old-cns' => $oldCns,
+            'new-cns' => $newCns
+        ];
+        $method = 'modify-cns-name';
+        return $this->post($this->resource, $method, $parameters);
+    }
+
+    /**
+     * @param int    $orderId
+     * @param string $cns
+     * @param string $oldip
+     * @param string $newip
+     *
+     * @return \Dhawton\LaravelLb\LogicBoxes
+     */
+    public function modifyChildNameServerIps(int $orderId, string $cns, string $oldip, string $newip) {
+        $method = 'modify-cns-ip';
+        $parameters = [
+            'order-id' => $orderId,
+            'cns' => $cns,
+            'old-ip' => $oldip,
+            'new-ip' => $newip
+        ];
+        return $this->post($this->resource, $method, $parameters);
+    }
 }
